@@ -65,15 +65,29 @@
 `git stash drop [<stash>]`|删除一个存档
 `git stash clear`|删除所有存档
 `git stash branch <branchname> <stash>`|基于进度创建分支
+## Git里程碑
+命令名称|作用
+:--|:--
+`git tag <tagName>`|创建本地tag
+`git push origin :<tagName>`|推送某个tag到远程仓库
+`git push origin --tags`|推送所有tag到远程仓库
+`git tag -a <tagName> <commitId>`|以某一个特定的提交创建tag
+`git show <tagName>`|查看本地某个 tag 的详细信息
+`git tag`或者`git tag -l`|查看本地所有 tag
+`git ls-remote --tags origin`|查看远程所有 tag
+`git tag -d <tagName>`|本地 tag 的删除
+`git push origin :refs/tags/<tagName>`|远程 tag 的删除(`git push origin :refs/tags/12345`)
+`git tag -a <tagname> -m "XXX..."`|指定标签信息——例`git tag -a v0.1.0 -m "release 0.1.0 version"`：创建附注标签。
+`git checkout [tagname]`|切换标签
 ## 修改提交日志
 * 未push:`git commit --amend`
 * 已push:
   1. `git commit --amend`
-  2. `git push orign master --force`
+  2. `git push origin master --force`
 ## Git版本回退
 * reset(不推荐)
   1. `git reset --hard <111>`
-  2. `git push -f -u orgin [dev]`
+  2. `git push -f -u origin [dev]`
   * 备注：问题服务器上代码虽然被还原了，但是其他人的版本依然是回退前的版本，如果别人再提交那么回退操作就白做了。
 * revert(推荐)
   1. `git revert -n 版本号`
