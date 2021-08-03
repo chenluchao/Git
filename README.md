@@ -38,7 +38,50 @@
 `git remote add 别名 远程地址`|给远程地址添加别名
 `git push 别名 分子名`|将该分支提交到该远程库
 `git pull 别名 分子名`|从远程代码库的某分支上拉取该代码
+
 ## 代码合并
+
+## `git rebase`
+* `git rebase`用于把一个分支的修改合并到当前分支
+* `git rebase`配置如下：
+
+命令名称|作用
+:--|:--
+`--continue`|用户解决完冲突后先`add`然后使用`git rebase --continue`
+`--abort`|放弃代码合并回到操作前的样子
+`--quit`|代码发生冲突后退出cherry pick，但是不回到操作前
+* `git rebase -i  [startpoint]  [endpoint]`弹出交互式的界面让用户编辑完成合并操作前开后闭（可以使用startpoint^让其包含前）
+  * 交互式界面参数配置：
+    * pick：保留该commit（缩写:p）
+    * reword：保留该commit，但我需要修改该commit的注释（缩写:r）
+    * edit：保留该commit, 但我要停下来修改该提交(不仅仅修改注释)（缩写:e）
+    * squash：将该commit和前一个commit合并（缩写:s）
+    * fixup：将该commit和前一个commit合并，但我不要保留该提交的注释信息（缩写:f）
+    * exec：执行shell命令（缩写:x）
+    * drop：我要丢弃该commit（缩写:d）
+* 使用场景
+  1. 合并分支多个commit为一个进行提交
+    * `git rebase -i HEAD~4`
+    * 自动进入 vi 编辑模式根据上面交互式配置选择操作
+    * 如果异常退出了执行`git rebase --edit-todo`再次编辑，完成执行`git rebase --continue`
+    * `git log`查看结果
+  2. 分支合并情况一
+    * 先从 master 分支切出一个 dev 分支，进行开发
+    * 这时候，你的同事完成了一次 hotfix ，并合并入了 master 分支，此时 master 已经领先于你的 feature1 分支了
+    * 恰巧，我们想要同步 master 分支的改动也想要保持一份干净的 commit
+    * 在feature1 分支上`git rebase master`
+      * 备注rebase 做了什么操作呢？首先， git 会把 feature1 分支里面的每个 commit 取消掉；其次，把上面的操作临时保存成 patch 文件，存在 .git/rebase 目录下；然后，把 feature1 分支更新到最新的 master 分支；最后，把上面保存的 patch 文件应用到 feature1 分支上；
+  3. 分支合并情况二
+    * 从 master 分支切出一个 dev 分支，进行开发
+    * master有了新的提交
+    * dev也有了新的提交，现在要将量分支代码进行合并
+    * 在dev分支`git rebase -i master`编辑完成
+    * `git push -f`将dev分支代码强制更新提交
+    * 切换到master分支`git rebase dev`这样master代码和dev就一样了
+    * `git push`将master分支代码提交
+    * 完成合并
+    
+### `git cherry-pick`
 * `git cherry-pick [commitHash]`|合并某次提交的代码
 * `git cherry-pick`配置如下：
 
